@@ -1,0 +1,9 @@
+# Not part of the website: keep these on your computer only
+.claude/
+Passport size photo.jpeg
+YASH_PATIL_Struct_09-26 (1).pdf
+
+# Windows / editor clutter
+Thumbs.db
+desktop.ini
+.vscode/

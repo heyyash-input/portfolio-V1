@@ -1,0 +1,26 @@
+HOW TO UPDATE YOUR RESUME
+=========================
+
+On your computer (easiest):
+  Drag your new resume PDF and drop it onto  update-resume.bat
+  (or double-click update-resume.bat and pick the PDF).
+  The PDF can have any name. Done.
+
+By hand:
+  Replace resume.pdf in this folder with your new PDF.
+  Keep the name exactly: resume.pdf
+
+Online (after the site is on GitHub Pages):
+  GitHub repo -> open the "resume" folder -> Add file -> Upload files
+  -> drop your new resume.pdf -> Commit changes.
+  The site updates in about a minute.
+
+Never want to touch the site again for resume updates?
+  Put your resume on Google Drive (Share -> Anyone with the link -> Viewer)
+  and paste that link into data.js:
+      resume: {
+        file: "https://drive.google.com/file/d/XXXX/view",
+        ...
+  After that, you only update the file on Google Drive.
+
+The file name recruiters get when downloading is set in data.js -> downloadName.
