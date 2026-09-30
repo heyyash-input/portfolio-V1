@@ -90,6 +90,25 @@ const PORTFOLIO = {
      metric          → optional headline number, e.g. { value: "88.89%", label: "test accuracy" }
   */
   projects: [
+
+      {
+      title: "EduPredict",
+      subtitle: "Student Performance Analytics & Prediction",
+      category: ["Data Science", "AI / ML"],
+      featured: false,
+      description: "End-to-end ML pipeline and interactive dashboard that cleans, stores and analyses data for 300 students and predicts pass/fail outcomes with 85% accuracy.",
+      points: [
+        "Built an end-to-end data pipeline in Python: data generation, cleaning with pandas (removing duplicates, filling missing values with the median), SQLite storage and SQL analysis.",
+        "Trained a Logistic Regression model with scikit-learn that reached 85% test accuracy against a 69% baseline, and prevented data leakage by excluding outcome-derived features.",
+        "Built an interactive Streamlit dashboard with summary numbers, SQL-driven charts and real-time pass/fail predictions with confidence scores.",
+      ],
+      tech: ["Python", "pandas", "SQL", "SQLite", "scikit-learn", "Streamlit"],
+      github: "https://github.com/heyyash-input/student-analysis",
+      live: "",
+      image: "",
+      metric: { value: "85%", label: "Model Accuracy"},
+    },
+
     {
       title: "Tulip",
       subtitle: "Smart Childhood Development Tracker",
