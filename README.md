@@ -168,3 +168,7 @@ From then on, each update is: edit `data.js` → upload/commit it on GitHub → 
 - Scroll animations (turned off automatically for people who prefer reduced motion)
 - Copy-email button and a live Pune clock in the contact section
 - SEO and link-preview tags, keyboard- and screen-reader-friendly
+
+## Portfolio FAQ chat
+
+The floating Ask about my work button opens a small FAQ assistant. It answers common visitor questions about projects, skills, experience, education, certificates, résumé and contact details using the public information already in data.js. Update that file as usual and the assistant picks up the new content automatically. The question matching and suggested prompts live in js/chatbot.js if you want to change the assistant behavior. This first version is rule-based: it does not use an AI service, collect messages, or need an API key.
