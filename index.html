@@ -91,6 +91,34 @@
     <section class="section" id="contact" aria-labelledby="contact-h"></section>
   </main>
 
+  <dialog class="setup-guide" id="studytrail-setup" aria-labelledby="setup-title">
+    <header class="setup-header">
+      <div><span class="label">StudyTrail / Get started</span><h2 id="setup-title">Set up on your device</h2></div>
+      <form method="dialog"><button class="setup-close" aria-label="Close setup guide" autofocus>&times;</button></form>
+    </header>
+    <p class="setup-intro">A study coach in your terminal. Works on Windows, macOS and Linux. Start with the free offline quiz, then connect an AI provider when you are ready.</p>
+    <ol class="setup-steps">
+      <li><h3>Install Python and uv</h3>
+        <p>Use Python 3.10&ndash;3.14 (3.12 recommended). Install uv to keep StudyTrail in its own environment. Open a new PowerShell window on Windows, or Terminal on macOS/Linux, after installation.</p>
+        <div class="btns"><a class="btn sm" href="https://www.python.org/downloads/" target="_blank" rel="noopener noreferrer">Get Python</a><a class="btn sm" href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" rel="noopener noreferrer">Install uv</a></div>
+      </li>
+      <li><h3>Install StudyTrail</h3><p>Run these commands in your terminal. They work on all three operating systems.</p>
+        <div class="setup-command"><pre><code>uv tool install studytrails
+uv tool update-shell</code></pre><button class="setup-copy" type="button" aria-label="Copy installation commands">Copy</button></div>
+        <p>Close and reopen your terminal so it can find the new command.</p>
+      </li>
+      <li><h3>Try the offline demo</h3><p>No API key needed. Answer a short Python quiz and see your score. Demo progress is saved separately.</p>
+        <div class="setup-command"><pre><code>studytrails demo</code></pre><button class="setup-copy" type="button" aria-label="Copy demo command">Copy</button></div>
+      </li>
+      <li><h3>Start learning with your own notes</h3>
+        <div class="setup-command"><pre><code>studytrails</code></pre><button class="setup-copy" type="button" aria-label="Copy launch command">Copy</button></div>
+        <p>Choose <strong>Configure AI</strong> to connect OpenAI, Groq, DeepSeek or a compatible provider. Enter your provider's API key and a model that supports tool calling in the app. Live AI usage follows your provider's pricing.</p>
+        <p>Choose <strong>Manage notes</strong> to add a .txt or .md file and a subject. Then choose <strong>Start learning</strong> with that subject to ask questions and generate quizzes. Use <strong>View progress</strong> to see your saved results.</p>
+      </li>
+    </ol>
+    <details class="setup-help"><summary>Command not found?</summary><p>Open a new terminal after running <code>uv tool update-shell</code>. If the command is still missing, follow the PATH instructions printed by uv.</p></details>
+  </dialog>
+
   <div class="portfolio-chat" id="portfolio-chat">
     <button class="chat-launcher" id="chat-launcher" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Ask Mira"><span aria-hidden="true">&#x2726;</span> Ask Mira</button>
     <section class="chat-panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
@@ -105,7 +133,7 @@
   <noscript><p class="wrap" style="padding:40px 20px">This portfolio needs JavaScript turned on to show its content.</p></noscript>
 
   <script src="data.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/chatbot.js"></script>
+  <script src="js/main.js?v=studytrail-mira"></script>
+  <script src="js/chatbot.js?v=studytrail-mira"></script>
 </body>
 </html>

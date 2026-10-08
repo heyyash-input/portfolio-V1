@@ -52,7 +52,8 @@
 
 /* ───────── Base ───────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; -webkit-text-size-adjust: 100%; scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 body {
   background: var(--bg);
   color: var(--ink);
@@ -198,6 +199,10 @@ a.t:hover .arrow { transform: rotate(45deg); background: var(--lime); border-col
 .feat h3 { font-size: clamp(26px, 2.6vw, 34px); letter-spacing: -.035em; font-weight: 600; }
 .feat p { color: var(--inv-muted); font-size: 15px; max-width: 400px; margin-top: 6px; }
 .feat-foot { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.feat-demo { gap: 18px; transform-style: preserve-3d; }
+.feat-demo .terminal-preview { flex: none; width: 100%; margin: 0; }
+.feat-demo .terminal-output { height: 130px; }
+.btn.setup-open { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); }
 .metric { font-size: clamp(44px, 4.6vw, 60px); font-weight: 600; letter-spacing: -.05em; color: var(--lime); line-height: 1; }
 .metric + .label { margin-top: 6px; }
 
@@ -219,7 +224,7 @@ a.t:hover .arrow { transform: rotate(45deg); background: var(--lime); border-col
 .filter:hover { color: var(--ink); }
 .filter[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
 .projects { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--gap); }
-.project { padding: 0; display: flex; flex-direction: column; }
+.project { padding: 0; display: flex; flex-direction: column; transform-style: preserve-3d; }
 .project[hidden] { display: none; }
 .cover { position: relative; aspect-ratio: 2 / 1; background: var(--inv); border-bottom: 1px solid var(--line); overflow: hidden; }
 .cover img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
@@ -228,6 +233,29 @@ a.t:hover .arrow { transform: rotate(45deg); background: var(--lime); border-col
 .project:hover .cover .cloud { transform: scale(1.06); }
 .cover-num { position: absolute; left: 20px; bottom: 16px; font: 500 12px var(--mono); letter-spacing: .06em; color: var(--inv-muted); }
 .badge { position: absolute; top: 14px; right: 14px; background: var(--lime); color: var(--lime-ink); font-size: 12px; font-weight: 600; padding: 5px 10px; border-radius: 99px; }
+.project[data-demo="studytrail-terminal"] { padding: 0; }
+.project[data-demo="studytrail-terminal"] .cover { display: flex; align-items: center; aspect-ratio: auto; padding: 48px 0 20px; background: radial-gradient(ellipse at 50% 90%, #303b21, #131612 75%); }
+.terminal-preview { position: relative; z-index: 1; width: 88%; margin: auto; overflow: hidden; border: 1px solid #343832; border-radius: 12px; background: #111410; color: #e7eadf; box-shadow: 0 14px 35px rgba(0,0,0,.32); font-family: var(--mono); transform: translateZ(18px); transition: transform .3s ease, box-shadow .3s ease; }
+@media (hover: hover) and (pointer: fine) {
+  .project:hover, .feat-demo:hover { transform: perspective(1000px) rotateX(var(--tilt-y, 0deg)) rotateY(var(--tilt-x, 0deg)) translateY(-3px); box-shadow: var(--shadow); }
+  [data-demo="studytrail-terminal"]:hover .terminal-preview { transform: translateZ(30px) scale(1.015); box-shadow: 0 20px 42px rgba(0,0,0,.38); }
+}
+.terminal-bar { display: flex; align-items: center; gap: 9px; min-height: 30px; padding: 0 11px; border-bottom: 1px solid #292d27; color: #a9ad9f; font-size: 10px; }
+.terminal-lights { display: flex; gap: 4px; }
+.terminal-lights i { width: 6px; height: 6px; border-radius: 50%; background: #55594f; }
+.terminal-lights i:first-child { background: #ed7666; }
+.terminal-lights i:nth-child(2) { background: #e5c46b; }
+.terminal-lights i:nth-child(3) { background: #a5d55e; }
+.terminal-output { display: flex; flex-direction: column; gap: 7px; height: 154px; overflow: hidden; padding: 12px 13px 14px; font-size: 11px; line-height: 1.5; }
+.terminal-line { flex: none; white-space: pre-wrap; overflow-wrap: anywhere; }
+.terminal-line.command, .terminal-line.success { color: var(--lime); }
+.terminal-line.heading { color: #8fdad3; }
+.terminal-line.muted { color: #a9ad9f; }
+.terminal-line.typing::after { content: "▍"; color: var(--lime); }
+.terminal-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 11px; border-top: 1px solid #292d27; color: #a9ad9f; font-size: 9px; }
+.terminal-play { flex: none; border: 1px solid #4b553b; border-radius: 5px; padding: 4px 6px; color: var(--lime); font: 10px var(--mono); }
+.terminal-play:hover { background: #28311d; }
+.terminal-play:focus-visible { outline-color: var(--lime); }
 .project .body { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 24px 24px; }
 .project h3 { font-size: 22px; font-weight: 600; letter-spacing: -.03em; line-height: 1.2; }
 .project .sub { font-size: 14px; color: var(--muted); margin-top: 2px; }
@@ -241,6 +269,25 @@ details summary:hover { color: var(--ink); }
 .points li { position: relative; padding-left: 16px; }
 .points li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 5px; height: 5px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 1px var(--lime-muted); }
 .project .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 4px; }
+
+/* StudyTrail installation guide */
+html:has(.setup-guide[open]) { overflow: hidden; }
+.setup-guide { width: min(640px, calc(100vw - 28px)); max-height: calc(100dvh - 40px); margin: auto; padding: clamp(20px, 4vw, 32px); border: 1px solid var(--line); border-radius: 24px; background: var(--tile); color: var(--ink); overflow-y: auto; scrollbar-width: thin; box-shadow: 0 24px 80px rgba(0,0,0,.3); }
+.setup-guide::backdrop { background: rgba(0,0,0,.6); backdrop-filter: blur(5px); }
+.setup-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.setup-header h2 { margin-top: 8px; font-size: clamp(24px, 4vw, 30px); line-height: 1.2; letter-spacing: -.035em; }
+.setup-close { width: 34px; height: 34px; border: 1px solid var(--line); border-radius: 50%; font-size: 23px; }
+.setup-intro { margin: 16px 0 24px; color: var(--muted); font-size: 14px; }
+.setup-steps { counter-reset: setup; list-style: none; display: grid; gap: 26px; }
+.setup-steps > li { position: relative; padding-left: 36px; }
+.setup-steps > li::before { counter-increment: setup; content: counter(setup); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 25px; height: 25px; border-radius: 8px; background: var(--lime); color: var(--lime-ink); font: 600 12px var(--mono); }
+.setup-steps h3 { font-size: 16px; font-weight: 600; }
+.setup-steps p, .setup-help p { margin: 8px 0 12px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.setup-command { display: flex; align-items: flex-start; gap: 8px; margin: 12px 0; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--soft); }
+.setup-command pre { flex: 1; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.7 var(--mono); }
+.setup-command code { font: inherit; }
+.setup-copy { flex: none; padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px; background: var(--tile); font-size: 11px; }
+.setup-help { margin-top: 24px; border-top: 1px solid var(--line); padding-top: 18px; }
 
 /* GitHub activity */
 .activity { display: grid; grid-template-columns: 3fr 1fr; gap: var(--gap); margin-top: var(--gap); }
@@ -377,6 +424,8 @@ details summary:hover { color: var(--ink); }
   .photo { min-height: 300px; }
   .section { padding-top: 84px; }
   .projects, .skills { grid-template-columns: 1fr; }
+  .setup-command { flex-direction: column; align-items: stretch; }
+  .setup-copy { align-self: flex-end; }
   .awards { grid-template-columns: 1fr; }
   .certs { grid-column: auto; }
   .cert { align-items: flex-start; }
@@ -393,6 +442,7 @@ details summary:hover { color: var(--ink); }
   html { scroll-behavior: auto; }
   .reveal { opacity: 1; translate: none; transition: none; }
   .status .dot i { animation: none; }
+  .project, .feat-demo, [data-demo="studytrail-terminal"] .terminal-preview { transform: none !important; }
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
 

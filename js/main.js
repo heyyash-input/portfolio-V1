@@ -83,6 +83,106 @@
     return `<svg class="cloud" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${dots}</svg>`;
   }
 
+  function terminalPreview() {
+    return `<div class="terminal-preview" role="group" aria-label="StudyTrail terminal walkthrough">
+      <div class="terminal-bar"><span class="terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span><span>studytrails / terminal</span></div>
+      <div class="terminal-output" aria-hidden="true"></div>
+      <div class="terminal-footer"><span>Offline demo · shortened preview</span><button class="terminal-play" type="button">Play preview</button></div>
+      <span class="sr-only">Sample session: StudyTrail checks progress, searches notes, and creates a Python loops quiz. The sample user answers B, completes the remaining questions, and saves a score of 3 out of 3. Play or stop the animation with the button.</span>
+    </div>`;
+  }
+
+  function setupTerminalDemo(card) {
+    const output = card.querySelector(".terminal-output");
+    const button = card.querySelector(".terminal-play");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    // A shortened replay of the project's offline demo, with sample answers.
+    const steps = [
+      { text: "$ studytrails demo", type: true, tone: "command", delay: 400 },
+      { text: "OFFLINE DEMO · Python loops", tone: "heading", delay: 500 },
+      { text: "Checking your progress...", tone: "muted", delay: 650 },
+      { text: "Searching your notes...", tone: "muted", delay: 750 },
+      { text: "Preparing your quiz...", tone: "muted", delay: 750 },
+      { text: "Loops | beginner", tone: "heading", delay: 400 },
+      { text: "1. Which values does list(range(3)) contain?", delay: 500 },
+      { text: "A. [1, 2, 3]    B. [0, 1, 2]\nC. [0, 1, 2, 3] D. [3]", delay: 1800 },
+      { text: "Your answer: B", type: true, tone: "command", delay: 850 },
+      { text: "… 2 more questions answered …", tone: "muted", delay: 1100 },
+      { text: "Saved result: 3/3 (100.0%)", tone: "success", delay: 850 },
+      { text: "1. Correct — answer B: [0, 1, 2]", tone: "success", delay: 650 },
+      { text: "range(3) starts at 0 and stops before 3.", delay: 500 },
+    ];
+    let timer;
+    let running = false;
+
+    function reset() {
+      clearTimeout(timer);
+      running = false;
+      button.textContent = "Play preview";
+      output.innerHTML = '<div class="terminal-line command">$ studytrails demo</div><div class="terminal-line">Your notes → quizzes → progress.</div><div class="terminal-line muted">Hover or press Play to watch.</div>';
+      output.scrollTop = 0;
+    }
+
+    function play() {
+      clearTimeout(timer);
+      running = true;
+      button.textContent = "Stop preview";
+      output.replaceChildren();
+      let index = 0;
+      function next() {
+        if (index === steps.length) {
+          running = false;
+          button.textContent = "Replay";
+          return;
+        }
+        const step = steps[index++];
+        const line = document.createElement("div");
+        line.className = `terminal-line ${step.tone || ""}`;
+        output.appendChild(line);
+        let length = step.type && !reducedMotion.matches ? 0 : step.text.length;
+        function write() {
+          line.textContent = step.text.slice(0, length);
+          line.classList.toggle("typing", length < step.text.length);
+          output.scrollTop = output.scrollHeight;
+          if (length < step.text.length) {
+            length++;
+            timer = setTimeout(write, 45);
+          } else {
+            timer = setTimeout(next, step.delay);
+          }
+        }
+        write();
+      }
+      next();
+    }
+
+    card.addEventListener("pointerenter", (event) => {
+      if (event.pointerType === "mouse") play();
+    });
+    card.addEventListener("pointerleave", (event) => {
+      if (event.pointerType === "mouse") reset();
+    });
+    button.addEventListener("click", () => running ? reset() : play());
+    reset();
+    return reset;
+  }
+
+  function setupProjectTilt(card) {
+    const canTilt = window.matchMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
+    card.addEventListener("pointerleave", () => {
+      card.style.removeProperty("--tilt-x");
+      card.style.removeProperty("--tilt-y");
+    });
+    card.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse" || !canTilt.matches) return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty("--tilt-x", `${x * 7}deg`);
+      card.style.setProperty("--tilt-y", `${-y * 7}deg`);
+    });
+  }
+
   /* ───────── 1. Hero bento grid ───────── */
   function statTile(s) {
     if (!s) return "";
@@ -95,6 +195,17 @@
   function featuredTile(p) {
     const url = p.github || p.live;
     const m = p.metric && p.metric.value;
+    if (p.demo === "studytrail-terminal") {
+      return `<article class="t inv feat feat-demo c2 r2 col" data-demo="studytrail-terminal" aria-label="Featured project: ${esc(p.title)}">
+        <span class="label">Featured project</span>
+        <div><h3>${esc(p.title)}</h3><p>${esc(p.description)}</p></div>
+        ${terminalPreview()}
+        <div class="btns">
+          ${setupButton(p)}
+          ${p.github ? `<a class="btn ghost sm" ${ext(p.github)}>${I.github}Source code</a>` : ""}
+        </div>
+      </article>`;
+    }
     return `<a class="t inv feat c2 r2 col" ${url ? ext(url) : 'href="#projects"'} aria-label="Featured project: ${esc(p.title)}">
       ${cloud(p.title, 70)}
       <span class="arrow">${I.arrow}</span>
@@ -171,18 +282,50 @@
 
       ${stats.slice(3).map(statTile).join("")}
     `;
+    const demo = $("#hero .feat-demo");
+    if (demo) {
+      setupTerminalDemo(demo);
+      setupProjectTilt(demo);
+    }
+  }
+
+  function setupButton(p) {
+    return p.setupGuide === "studytrail"
+      ? `<button class="btn sm setup-open" type="button" aria-haspopup="dialog" aria-controls="studytrail-setup">${I.download}Set up on your device</button>`
+      : "";
+  }
+
+  function setupInstallGuide() {
+    const dialog = $("#studytrail-setup");
+    document.addEventListener("click", (event) => {
+      if (event.target.closest(".setup-open")) dialog.showModal();
+    });
+    dialog.querySelectorAll(".setup-copy").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const text = button.closest(".setup-command").querySelector("code").textContent;
+        try {
+          await navigator.clipboard.writeText(text);
+          button.textContent = "Copied";
+        } catch {
+          button.textContent = "Select text to copy";
+        }
+        setTimeout(() => { button.textContent = "Copy"; }, 2000);
+      });
+    });
   }
 
   /* ───────── 2. Projects + filter buttons ───────── */
   function projectCard(p, i, all) {
     const cats = list(p.category);
     const m = p.metric && p.metric.value;
-    const cover = p.image
+    const cover = p.demo === "studytrail-terminal"
+      ? terminalPreview()
+      : p.image
       ? `<img src="${esc(p.image)}" alt="Screenshot of ${esc(p.title)}" loading="lazy">`
       : `${cloud(p.title)}<span class="cover-num">${String(i + 1).padStart(2, "0")} / ${String(all.length).padStart(2, "0")}</span>`;
     const points = list(p.points);
 
-    return `<article class="t project" data-cat="${esc(cats.join("|"))}">
+    return `<article class="t project" data-cat="${esc(cats.join("|"))}"${p.demo ? ` data-demo="${esc(p.demo)}"` : ""}>
       <div class="cover">${cover}${m ? `<span class="badge">${esc(p.metric.value)} ${esc(p.metric.label)}</span>` : ""}</div>
       <div class="body">
         ${cats.length ? `<span class="label">${cats.map(esc).join(" · ")}</span>` : ""}
@@ -191,8 +334,9 @@
         ${points.length ? `<details><summary>Key highlights</summary><ul class="points">${points.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></details>` : ""}
         <div class="chips">${list(p.tech).map(chip).join("")}</div>
         <div class="actions">
+          ${setupButton(p)}
           ${p.github ? `<a class="btn sm" ${ext(p.github)}>${I.github}Code</a>` : ""}
-          ${p.live ? `<a class="btn sm primary" ${ext(p.live)}>${I.globe}Live demo</a>` : ""}
+          ${p.live ? `<a class="btn sm primary" ${ext(p.live)}>${I.globe}${esc(p.liveLabel || "Live demo")}</a>` : ""}
         </div>
       </div>
     </article>`;
@@ -201,6 +345,10 @@
   function renderProjects() {
     const projects = list(D.projects);
     $("#project-list").innerHTML = projects.map(projectCard).join("");
+    document.querySelectorAll("#project-list .project").forEach(setupProjectTilt);
+
+    const demoCard = $("#project-list [data-demo='studytrail-terminal']");
+    const resetDemo = demoCard ? setupTerminalDemo(demoCard) : null;
 
     const cats = [...new Set(projects.flatMap((p) => list(p.category)))];
     if (cats.length < 2) return; // no point filtering a single category
@@ -216,6 +364,7 @@
       document.querySelectorAll(".project").forEach((card) => {
         card.hidden = f !== "All" && !card.dataset.cat.split("|").includes(f);
       });
+      if (demoCard && demoCard.hidden) resetDemo();
     });
   }
 
@@ -511,6 +660,7 @@
   renderChrome();
   renderHero();
   renderProjects();
+  setupInstallGuide();
   renderActivity();
   renderJourney();
   renderSkills();

@@ -87,9 +87,34 @@ const PORTFOLIO = {
      image           → optional screenshot: put the file in assets/projects/
                        and write "assets/projects/your-file.png".
                        Leave "" to get an auto-generated cover.
+     demo            → optional built-in visual preview; "studytrail-terminal"
+                       plays a short terminal walkthrough on hover or tap.
+     setupGuide      → "studytrail" adds the device setup guide button.
+     liveLabel       → optional label for the live link (e.g. "View on PyPI").
      metric          → optional headline number, e.g. { value: "88.89%", label: "test accuracy" }
   */
   projects: [
+
+      {
+  title: "StudyTrail",
+  subtitle: "Agentic AI Study Assistant",
+  category: ["AI / ML", "Python"],
+  featured: true,
+  description: "Published a Python CLI study assistant that uses AI tools to search personal notes, generate quizzes and track learning progress across subjects.",
+  points: [
+    "Built a bounded AI agent with tools for subject-specific note retrieval, quiz generation and progress tracking, using Pydantic validation and SQLite storage.",
+    "Integrated OpenAI, Groq, DeepSeek and custom OpenAI-compatible providers with secure API-key storage, formatted terminal responses and an offline demo.",
+    "Published the studytrails package on PyPI and validated functionality with 63 automated tests and installed-package checks.",
+  ],
+  tech: ["Python", "OpenAI SDK", "Pydantic", "SQLite", "Rich", "uv", "GitHub Actions"],
+  github: "https://github.com/heyyash-input/StudyTrails",
+  live: "https://pypi.org/project/studytrails/",
+  liveLabel: "View on PyPI",
+  image: "",
+  demo: "studytrail-terminal",
+  setupGuide: "studytrail",
+},
+
 
       {
       title: "EduPredict",
@@ -130,7 +155,7 @@ const PORTFOLIO = {
       title: "LiDARNet",
       subtitle: "LiDAR Point Cloud Data Pipeline",
       category: ["AI / ML"],
-      featured: true,
+      featured: false,
       description: "Deep-learning pipeline that classifies LiDAR point clouds with PointMLP, using coordinates, GPS time and reflectance.",
       points: [
         "Developed a PointMLP-based point-cloud classification pipeline over spatial and sensor attributes (coordinates, GPS time, reflectance).",
