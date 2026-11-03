@@ -70,7 +70,7 @@ const PORTFOLIO = {
      highlight: true  → makes that tile lime green                           */
   stats: [
     { label: "LeetCode",  value: "150+",   note: "DSA problems solved" },
-    { label: "CGPA",      value: "8.33",   note: "B.Tech CSE · MIT ADT '27" },
+    { label: "CGPA",      value: "8.3",   note: "B.Tech CSE · MIT ADT '27" },
     { label: "Hackathon", value: "Top 50", note: "SIH 2025 qualifier", highlight: true },
   ],
 
