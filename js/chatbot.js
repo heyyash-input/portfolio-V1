@@ -41,7 +41,28 @@
     }
     return projectAnswer(/study\s*trail/)+'<br><br>It runs in your terminal: learn from notes, practise with quizzes and track your progress. You can watch the terminal preview in the featured card or install it on your device.'+setup;
   }
+  function echoCacheAnswer(q) {
+    var project=projects.find(function(p){return /echo\s*cache/i.test(p.title);});
+    var source=project&&project.github?' <a href="'+esc(project.github)+'" target="_blank" rel="noopener noreferrer">View EchoCache on GitHub</a>.':'';
+    if (/incorrect|wrong|safe|accuracy|conditions|context|numbers/.test(q)) {
+      return 'EchoCache combines semantic similarity with checks for numbers, conditions and conversation context before reusing an answer. These checks help reduce incorrect reuse when questions sound similar but have different requirements; they do not guarantee every answer is correct.';
+    }
+    if (/token|cost|free|groq/.test(q)) {
+      return 'A compatible EchoCache hit reuses a saved answer and uses <strong>zero Groq generation tokens</strong>. When no compatible answer is cached, Groq generates a fresh answer. Local embeddings, database queries and hosting still use computing resources, so this does not mean the entire application has zero cost.';
+    }
+    if (/setup|set up|install|run|docker|demo|try/.test(q)) {
+      return 'EchoCache uses Docker Compose for its FastAPI app, PostgreSQL database and persistent model storage. Its project entry does not currently list a hosted demo. See the repository for setup instructions and configuration.'+source;
+    }
+    if (/github|source|code|repository/.test(q)) {
+      return 'You can explore EchoCache’s implementation and project documentation on GitHub.'+source;
+    }
+    if (/how|semantic|embedding|similar|cache hit|cache miss/.test(q)) {
+      return 'EchoCache turns incoming questions into local embeddings using FastEmbed, then searches saved answers in PostgreSQL with pgvector. It checks semantic matches against numbers, conditions and conversation context. A compatible hit reuses the saved answer; otherwise, Groq supplies a fresh answer. This reduces repeated LLM calls for similar policy questions.';
+    }
+    return projectAnswer(/echo\s*cache/);
+  }
   var rules=[
+    [/\becho[\s-]*cache\b|\bsemantic cach(?:e|ing)\b/,echoCacheAnswer],
     [/\bstudy[\s-]*trails?\b|\bstudtrails?\b|\bstudy (assistant|coach)\b|\bagentic ai\b/,studyTrailAnswer],
     [/tulip|child|gemini/,function(){return projectAnswer(/tulip/);}],
     [/lidar|point cloud|pytorch/,function(){return projectAnswer(/lidar/);}],
@@ -63,7 +84,8 @@
   function add(content,who,html){var n=document.createElement("div");n.className="chat-message "+who;if(html)n.innerHTML=content;else n.textContent=content;log.appendChild(n);log.scrollTop=log.scrollHeight;}
   function send(raw){var q=String(raw||"").trim().slice(0,300);if(!q)return;add(q,"user",false);add(respond(q),"bot",true);input.value="";input.focus();}
   var starterGroups=[
-    {title:"Projects",description:"Explore Yash's project work",questions:["What is StudyTrail?","What problem does Tulip solve?","What technologies did you use for EduPredict?","What accuracy did LiDARNet achieve?","Where can I see Yash's project code?"]},
+    {title:"Projects",description:"Explore Yash's project work",questions:["What is EchoCache?","What is StudyTrail?","What problem does Tulip solve?","What technologies did you use for EduPredict?","What accuracy did LiDARNet achieve?","Where can I see Yash's project code?"]},
+    {title:"EchoCache",description:"Semantic caching, token savings and setup",questions:["What is EchoCache?","How does EchoCache recognize similar questions?","Does EchoCache use zero Groq tokens?","How does EchoCache reduce incorrect answer reuse?","What technologies power EchoCache?","How can I run EchoCache?","Where is EchoCache's source code?"]},
     {title:"StudyTrail",description:"AI study assistant, demo and setup",questions:["What is StudyTrail?","What makes StudyTrail agentic?","How do I install StudyTrail on my device?","Can I use StudyTrail offline?","Which AI providers does StudyTrail support?","How do I add notes to StudyTrail?","How does StudyTrail track my progress?","Is StudyTrail free?"]},
     {title:"Skills & Experience",description:"Skills, internship and certificates",questions:["What backend technologies does Yash know?","What did Yash do during his internship?","What AI or machine-learning tools has he used?","What certifications does Yash have?"]},
     {title:"Contact & Opportunities",description:"Jobs, freelancing and contact",questions:["Is Yash open to job opportunities?","How can I contact Yash?","Does Yash do freelance work?"]}
