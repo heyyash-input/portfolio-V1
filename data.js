@@ -115,6 +115,23 @@ const PORTFOLIO = {
   setupGuide: "studytrail",
 },
 
+{
+  title: "EchoCache",
+  subtitle: "Semantic Cache for AI Policy Answers",
+  category: ["AI / ML", "Backend"],
+  featured: true,
+  description: "Dockerized policy assistant that recognizes similar questions and reuses saved answers, reducing repeat LLM calls.",
+  points: [
+    "Built a FastAPI chat application that creates local embeddings for incoming questions and searches cached answers with PostgreSQL and pgvector.",
+    "Added semantic matching with checks for numbers, conditions and conversation context to reduce incorrect answer reuse.",
+    "Integrated Groq for fresh answers and Docker Compose for the app, database and persistent model storage; a compatible cache hit uses zero Groq generation tokens.",
+  ],
+  tech: ["Python", "FastAPI", "FastEmbed", "PostgreSQL", "pgvector", "Groq", "Docker"],
+  github: "https://github.com/heyyash-input/EchoCache",
+  live: "",
+  image: "https://raw.githubusercontent.com/heyyash-input/EchoCache/main/docs/images/echocache-banner.png",
+  metric: { value: "0", label: "Groq Tokens on Cache Hit" },
+},
 
       {
       title: "EduPredict",
